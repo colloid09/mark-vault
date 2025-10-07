@@ -43,3 +43,72 @@ Save links instantly. Organize with tags. Find them fast — anytime, anywhere.
 
 ## 📂 Project Structure
 
+mark-vault/
+├── manage.py
+├── db.sqlite3
+├── .git/
+├── markvault/ # Django project settings
+│ ├── init.py
+│ ├── asgi.py
+│ ├── settings.py
+│ ├── urls.py
+│ └── wsgi.py
+├── bookmarks/ # Core Django app for bookmarks
+│ ├── migrations/
+│ ├── templates/
+│ │ └── bookmarks/
+│ │ ├── index.html
+│ │ ├── add_bookmark.html
+│ │ └── ...
+│ ├── static/
+│ │ ├── css/
+│ │ ├── js/
+│ │ └── images/
+│ ├── models.py
+│ ├── views.py
+│ ├── urls.py
+│ └── admin.py
+└── README.md
+
+
+---
+
+## ⚙️ Installation & Setup
+
+Follow these steps to set up the project locally:
+
+### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/your-username/mark-vault.git
+cd mark-vault
+```
+
+### 2️⃣ Create a Virtual Environment
+```bash
+python -m venv env
+# Activate
+env\Scripts\activate        # Windows
+source env/bin/activate     # macOS/Linux
+```
+
+### 3️⃣ Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 4️⃣ Apply Database Migrations
+```bash
+python manage.py migrate
+```
+
+### 5️⃣ Run the Server
+```bash
+python manage.py migrate
+```
+
+###6️⃣ Access the App
+```bash
+http://127.0.0.1:8000/
+```
+
+---
