@@ -43,33 +43,34 @@ Save links instantly. Organize with tags. Find them fast — anytime, anywhere.
 
 ## 📂 Project Structure
 
+```
 mark-vault/
 ├── manage.py
 ├── db.sqlite3
 ├── .git/
-├── markvault/ # Django project settings
-│ ├── init.py
-│ ├── asgi.py
-│ ├── settings.py
-│ ├── urls.py
-│ └── wsgi.py
-├── bookmarks/ # Core Django app for bookmarks
-│ ├── migrations/
-│ ├── templates/
-│ │ └── bookmarks/
-│ │ ├── index.html
-│ │ ├── add_bookmark.html
-│ │ └── ...
-│ ├── static/
-│ │ ├── css/
-│ │ ├── js/
-│ │ └── images/
-│ ├── models.py
-│ ├── views.py
-│ ├── urls.py
-│ └── admin.py
+├── markvault/            # Django project settings
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── bookmarks/            # Core Django app for bookmarks
+│   ├── migrations/
+│   ├── templates/
+│   │   └── bookmarks/
+│   │       ├── index.html
+│   │       ├── add_bookmark.html
+│   │       └── ...
+│   ├── static/
+│   │   ├── css/
+│   │   ├── js/
+│   │   └── images/
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   └── admin.py
 └── README.md
-
+```
 
 ---
 
@@ -103,12 +104,87 @@ python manage.py migrate
 
 ### 5️⃣ Run the Server
 ```bash
-python manage.py migrate
+python manage.py runserver
 ```
 
-###6️⃣ Access the App
-```bash
+### 6️⃣ Access the App
+Open your browser and go to:
+```
 http://127.0.0.1:8000/
 ```
 
 ---
+
+## 🪄 Usage Guide
+
+1. Launch the homepage to view your bookmarks.  
+2. Add bookmarks with a title, URL, tags, and notes.  
+3. Use the **search bar** to find bookmarks quickly.  
+4. Edit or delete existing bookmarks as needed.  
+5. Enjoy a smooth, mobile-friendly experience.
+
+---
+
+## 📸 Screenshots
+
+> *(Replace with your own screenshots once ready)*
+
+| Dashboard | Add Bookmark |
+|------------|---------------|
+| ![Dashboard Screenshot](assets/dashboard.png) | ![Add Bookmark Screenshot](assets/add-bookmark.png) |
+
+---
+
+## 💡 Future Enhancements
+
+- 🔐 User authentication (Login & Registration)
+- 🌗 Dark mode
+- ☁️ Cloud sync or backup
+- 🧩 Chrome extension integration
+- 📊 Analytics (Most visited links, usage trends)
+- 📤 Import/export bookmarks (CSV/JSON)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!  
+Here’s how you can get started:
+
+1. Fork this repository  
+2. Create a feature branch  
+   ```bash
+   git checkout -b feature/new-feature
+   ```
+3. Commit your changes  
+   ```bash
+   git commit -m "Add new feature"
+   ```
+4. Push your branch  
+   ```bash
+   git push origin feature/new-feature
+   ```
+5. Open a Pull Request 🚀
+
+---
+
+## 🧾 License
+
+This project is licensed under the **MIT License**.  
+Feel free to use and modify it for your own purposes.
+
+---
+
+## 👨‍💻 Author
+
+**Mark Vault**  
+Created by [Your Name]  
+📧 Email: your.email@example.com  
+🔗 GitHub: [your-username](https://github.com/your-username)
+
+---
+
+## 🌟 Support
+
+If you found this project helpful, please ⭐ it on GitHub!  
+> “Organize your web, one bookmark at a time.”
