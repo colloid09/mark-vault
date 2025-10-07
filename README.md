@@ -125,16 +125,6 @@ http://127.0.0.1:8000/
 
 ---
 
-## 📸 Screenshots
-
-> *(Replace with your own screenshots once ready)*
-
-| Dashboard | Add Bookmark |
-|------------|---------------|
-| ![Dashboard Screenshot](assets/dashboard.png) | ![Add Bookmark Screenshot](assets/add-bookmark.png) |
-
----
-
 ## 💡 Future Enhancements
 
 - 🔐 User authentication (Login & Registration)
@@ -178,9 +168,9 @@ Feel free to use and modify it for your own purposes.
 ## 👨‍💻 Author
 
 **Mark Vault**  
-Created by [Your Name]  
-📧 Email: your.email@example.com  
-🔗 GitHub: [your-username](https://github.com/your-username)
+Created by [Clyde Charles Coelho]  
+📧 Email: clydecc09.com  
+🔗 GitHub: [colloid09](https://github.com/colloid09)
 
 ---
 
