@@ -16,6 +16,8 @@ Developed using **Django**, **Bootstrap**, and **SQLite3**, it allows users to *
 
 Save links instantly. Organize with tags. Find them fast — anytime, anywhere.
 
+<img width="1886" height="857" alt="1" src="https://github.com/user-attachments/assets/f52d772d-ce8b-45f5-9efc-86bc50e57220" />
+
 ---
 
 ## ✨ Features
