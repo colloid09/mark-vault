@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Signup - MarkVault {% endblock %}
+
+{% block extra_head %}
+<style>
+  /* Split layout */
+  .auth-split{ min-height: calc(100vh - 64px); }
+  .auth-ill{
+    background:
+      radial-gradient(420px 260px at 25% 25%, rgba(20, 226, 241, 0.12), transparent 55%),
+      linear-gradient(180deg, rgba(20, 189, 241, 0.06), transparent);
+    border-right:1px solid var(--hx-border);
+  }
+  .auth-ill img{
+    width:100%; height:100%; object-fit:cover; opacity:.85; mix-blend-mode:screen;
+  }
+
+  /* Neon icon bubble */
+  .icon-bubble{
+    width:48px; height:48px; border-radius:50%;
+    display:inline-flex; align-items:center; justify-content:center;
+    background:rgba(20, 237, 241, 0.08);
+    border:1px solid var(--hx-border);
+    box-shadow:0 0 0 3px rgba(20, 226, 241, 0.08), 0 0 18px rgba(20, 226, 241, 0.35) inset;
+    color:var(--hx-primary);
+  }
+
+  /* Dark inputs */
+  .form-control, .form-select{
+    background:#0b1220; color:var(--hx-text);
+    border:1px solid var(--hx-border);
+  }
+  .form-control::placeholder{ color:#64748b; }
+  .form-control:focus, .form-select:focus{
+    border-color:var(--hx-primary-700);
+    box-shadow:0 0 0 .2rem rgba(20, 197, 241, 0.15);
+    background:#0b1220; color:var(--hx-text);
+  }
+  .input-group-text{
+    background:#0b1220; color:var(--hx-muted);
+    border:1px solid var(--hx-border);
+    border-right:0;
+  }
+  .btn, .input-group-text{ border-radius:.75rem; }
+  .card{ border-radius:1rem; }
+
+  .link-neon{ color:var(--hx-primary); text-decoration:none; }
+  .link-neon:hover{ text-decoration:underline; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row auth-split g-0">
+    <!-- Left: image/visual -->
+    <div class="col-lg-6 d-none d-lg-block auth-ill">
+      <!-- Replace image path as you like -->
+      <img src="{% static 'img/mark-vault.jpg' %}" alt="Cyber grid">
+    </div>
+
+    <!-- Right: form -->
+    <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center py-5">
+      <div class="bm-card bm-shadow p-4 p-md-5" style="max-width:520px; width:100%;">
+        <div class="text-center mb-3">
+          <span class="icon-bubble mb-2"><i class="fas fa-user-plus"></i></span>
+          <h3 class="bm-title mb-1">Create Account</h3>
+          <p class="bm-muted small mb-0">Start saving and organizing your favorite links.</p>
+        </div>
+
+        <form method="post" id="signupForm" novalidate>
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-user"></i></span>
+              <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+              <input type="email" name="email" class="form-control" placeholder="Enter email" required>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-lock"></i></span>
+              <input type="password" name="password" class="form-control" placeholder="Enter password" minlength="6" required>
+              <button type="button" class="btn btn-outline-secondary" data-togglepw aria-label="Show/Hide password">
+                <i class="far fa-eye"></i>
+              </button>
+            </div>
+            <small class="bm-muted">At least 6 characters.</small>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Confirm Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-check"></i></span>
+              <input type="password" name="confirm_password" class="form-control" placeholder="Confirm password" required>
+              <button type="button" class="btn btn-outline-secondary" data-togglepw aria-label="Show/Hide password">
+                <i class="far fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 mono">
+            <i class="fas fa-user-plus me-1"></i> Signup
+          </button>
+        </form>
+
+        <p class="text-center mt-3 mb-0">
+          Already have an account? <a class="link-neon" href="{% url 'login' %}">Login</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Password show/hide
+  document.querySelectorAll('[data-togglepw]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const input = btn.previousElementSibling; // input is right before the button
+      if(!input) return;
+      input.type = input.type === 'password' ? 'text' : 'password';
+      const icon = btn.querySelector('i');
+      icon.classList.toggle('fa-eye');
+      icon.classList.toggle('fa-eye-slash');
+    });
+  });
+
+  // Client-side confirm password check (UI only; server should still validate)
+  const form = document.getElementById('signupForm');
+  form.addEventListener('submit', (e)=>{
+    const pwd = form.querySelector('input[name="password"]').value;
+    const cpwd = form.querySelector('input[name="confirm_password"]').value;
+    if(pwd !== cpwd){
+      e.preventDefault();
+      Swal.fire({ icon:'warning', title:'Passwords do not match', text:'Please make sure both passwords are the same.' });
+    }
+  });
+</script>
+{% endblock %}

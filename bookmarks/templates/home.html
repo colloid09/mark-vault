@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% block title %}Welcome – MarkVault{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* ===== Hero (dark + neon) ===== */
+  .hero{
+    position:relative;
+    border-radius:1rem;
+    border:1px solid var(--hx-border);
+    padding:4rem 1.5rem;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, rgba(20, 219, 241, 0.12), transparent 60%),
+      radial-gradient(900px 500px at 110% 10%, rgba(20, 226, 241, 0.08), transparent 60%),
+      linear-gradient(180deg, #0f172a, #0b1220);
+  }
+  .hero::after{
+    content:'';
+    position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+    background-image:
+      linear-gradient(rgba(20, 178, 241, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(20, 186, 241, 0.06) 1px, transparent 1px);
+    background-size:24px 24px;
+    opacity:.7;
+    mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 85%);
+  }
+  .hero h1{ letter-spacing:.3px; }
+  .hero .lead{ color:var(--hx-muted); }
+
+  /* Icon bubble (neon ring) */
+  .icon-bubble{
+    width:48px; height:48px; display:inline-flex; align-items:center; justify-content:center;
+    border-radius:50%;
+    background:rgba(20, 215, 241, 0.08);
+    border:1px solid var(--hx-border);
+    box-shadow:0 0 0 3px rgba(20, 215, 241, 0.08), 0 0 18px var(--hx-primary-glow) inset;
+  }
+  .icon-bubble .fas{ color:var(--hx-primary); }
+
+  /* Buttons */
+  .btn-lg{ border-radius:.75rem; }
+  .btn-outline-primary{
+    color:var(--hx-primary); border-color:var(--hx-primary-700);
+  }
+  .btn-outline-primary:hover{
+    background:var(--hx-primary-700); color:#061014;
+    box-shadow:0 0 18px var(--hx-primary-glow);
+  }
+  .btn-success{
+    background:#107eb9; border-color:#057b96;
+  }
+  .btn-success:hover{
+    background:#107eb9; border-color:#057b96;
+    box-shadow:0 0 18px rgba(16, 134, 185, 0.28);
+  }
+
+  /* Feature cards */
+  .feature{
+    background:var(--hx-card);
+    border:1px solid var(--hx-border);
+    border-radius:1rem;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .feature:hover{
+    transform: translateY(-4px);
+    box-shadow:0 10px 24px rgba(0,0,0,.35);
+    border-color:rgba(20, 167, 241, 0.559);
+  }
+  .feature .icon-bubble{ width:40px; height:40px; }
+
+  /* Footer border tint */
+  .footer-border{ border-top:1px solid var(--hx-border); }
+</style>
+{% endblock %}
+
+{% block content %}
+  <!-- Hero -->
+  <section class="hero text-center mt-4 bm-card bm-shadow">
+    <div class="icon-bubble mx-auto mb-3">
+      <i class="fas fa-bookmark"></i>
+    </div>
+    <h1 class="display-5 fw-bold bm-title">Welcome to MarkVault</h1>
+    <p class="lead mt-2">Save, organize, and instantly find your favorite links with tags and notes—anytime, anywhere</p>
+
+    <div class="d-flex justify-content-center gap-3 flex-wrap mt-3">
+      {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg mono">
+          <i class="fas fa-tachometer-alt me-1"></i> Go to Dashboard
+        </a>
+      {% else %}
+        <a href="{% url 'signup' %}" class="btn btn-success btn-lg mono">
+          <i class="fas fa-user-plus me-1"></i> Signup
+        </a>
+        <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg mono">
+          <i class="fas fa-sign-in-alt me-1"></i> Login
+        </a>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- Feature highlights -->
+  <section class="mt-5">
+    <div class="row g-3">
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="feature h-100 p-3">
+          <div class="d-flex align-items-center mb-2">
+            <span class="icon-bubble me-2"><i class="fas fa-link"></i></span>
+            <h5 class="mb-0">Instant Save</h5>
+          </div>
+          <p class="mb-0 bm-muted small">Capture instantly, organize with tags and notes, and find anything anytime, anywhere.</p>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="feature h-100 p-3">
+          <div class="d-flex align-items-center mb-2">
+            <span class="icon-bubble me-2"><i class="fas fa-tags"></i></span>
+            <h5 class="mb-0">Smart Tags</h5>
+          </div>
+          <p class="mb-0 bm-muted small">Organize with tags, filter and find what you need in seconds.</p>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="feature h-100 p-3">
+          <div class="d-flex align-items-center mb-2">
+            <span class="icon-bubble me-2"><i class="fas fa-search"></i></span>
+            <h5 class="mb-0">Quick Search</h5>
+          </div>
+          <p class="mb-0 bm-muted small">Find your bookmarks instantly by title, tag, or note effortless and fast.</p>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="feature h-100 p-3">
+          <div class="d-flex align-items-center mb-2">
+            <span class="icon-bubble me-2"><i class="fas fa-shield-alt"></i></span>
+            <h5 class="mb-0">Secure & Private</h5>
+          </div>
+          <p class="mb-0 bm-muted small">Your data stays safe with protected access.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer (Home only) -->
+  <footer class="text-center bm-muted mt-5 py-3 footer-border">
+    Developed by <strong class="text-neon">Colloid09</strong>
+  </footer>
+{% endblock %}

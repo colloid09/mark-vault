@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% block title %}Edit Bookmark - MarkVault{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<style>
+  .card{ border-radius:1rem; }
+  .btn, .input-group-text{ border-radius:.75rem; }
+  .icon-bubble{
+    width:44px;height:44px;border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:#eef2ff;border:1px solid #e5e7eb;
+  }
+  .favicon{ width:20px;height:20px;border-radius:4px;object-fit:cover; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-4" style="max-width: 760px;">
+  <!-- Header -->
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div class="d-flex align-items-center gap-2">
+      <span class="icon-bubble"><i class="fas fa-edit"></i></span>
+      <h2 class="mb-0">Edit Bookmark</h2>
+    </div>
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary" data-back>
+      <i class="fas fa-arrow-left me-1"></i> Back
+    </a>
+  </div>
+
+  <!-- Messages (SweetAlert will also show these) -->
+  {% if messages %}
+    <div class="mb-3">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mb-2">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Edit Form -->
+  <div class="card bm-shadow p-3 p-lg-4">
+    <div class="d-flex align-items-center gap-2 mb-3 small text-muted">
+      <img class="favicon" src="https://www.google.com/s2/favicons?sz=64&domain_url={{ bookmark.url }}" alt="">
+      <span class="text-truncate">{{ bookmark.url }}</span>
+    </div>
+
+    <form method="post" id="editForm" novalidate>
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label class="form-label">Title</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="fas fa-heading"></i></span>
+          <input type="text" name="title" class="form-control" value="{{ bookmark.title }}" placeholder="Bookmark title" required>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">URL</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="fas fa-link"></i></span>
+          <input type="url" name="url" class="form-control" value="{{ bookmark.url }}" placeholder="https://example.com" required id="urlInput">
+          <button type="button" class="btn btn-outline-secondary" id="testLink" data-bs-toggle="tooltip" title="Open in new tab">
+            <i class="fas fa-external-link-alt"></i>
+          </button>
+          <button type="button" class="btn btn-outline-secondary" id="copyLink" data-bs-toggle="tooltip" title="Copy URL">
+            <i class="far fa-copy"></i>
+          </button>
+        </div>
+        <small class="text-muted">Make sure it starts with http:// or https://</small>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label">Category</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="fas fa-tags"></i></span>
+          <select name="category" class="form-select">
+            {% for key, value in categories %}
+              <option value="{{ key }}" {% if bookmark.category == key %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 flex-wrap">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-check me-1"></i> Save Changes
+        </button>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary" data-cancel>
+          <i class="fas fa-times me-1"></i> Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  // Tooltips
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+
+  // SweetAlert2 for Django messages
+  {% if messages %}
+    const alerts = [
+      {% for message in messages %}
+        { text: "{{ message|escapejs }}", tags: "{{ message.tags }}" },
+      {% endfor %}
+    ];
+    alerts.forEach(m => {
+      const tag = (m.tags || '').toLowerCase();
+      const icon = tag.includes('success') ? 'success'
+                : (tag.includes('error') || tag.includes('danger')) ? 'error'
+                : tag.includes('warning') ? 'warning'
+                : 'info';
+      const title = icon === 'success' ? 'Success'
+                : icon === 'error' ? 'Error'
+                : icon === 'warning' ? 'Warning'
+                : 'Info';
+      Swal.fire({ icon, title, text: m.text, timer: 2200, timerProgressBar: true, showConfirmButton: false });
+    });
+  {% endif %}
+
+  const form = document.getElementById('editForm');
+  const urlInput = document.getElementById('urlInput');
+  const copyBtn = document.getElementById('copyLink');
+  const testBtn = document.getElementById('testLink');
+
+  // Basic URL validation (UI only; server validation still applies)
+  form.addEventListener('submit', (e)=>{
+    const url = urlInput.value.trim();
+    try {
+      const u = new URL(url);
+      if (!u.protocol.startsWith('http')) throw new Error('Invalid protocol');
+    } catch (err) {
+      e.preventDefault();
+      Swal.fire({ icon:'warning', title:'Invalid URL', text:'Please enter a valid URL starting with http:// or https://.' });
+    }
+  });
+
+  // Copy URL
+  copyBtn.addEventListener('click', async ()=>{
+    try{
+      await navigator.clipboard.writeText(urlInput.value.trim());
+      Swal.fire({ icon:'success', title:'Copied', text:'URL copied to clipboard.', timer:1400, showConfirmButton:false });
+    }catch(e){
+      Swal.fire({ icon:'error', title:'Failed', text:'Could not copy the URL.' });
+    }
+  });
+
+  // Test link (open in new tab)
+  testBtn.addEventListener('click', ()=>{
+    const url = urlInput.value.trim();
+    if(!url) return;
+    try{
+      const u = new URL(url);
+      window.open(u.href, '_blank', 'noopener');
+    }catch(e){
+      Swal.fire({ icon:'info', title:'Enter a valid URL', text:'Please input a valid URL to open.' });
+    }
+  });
+
+  // Warn on unsaved changes if user clicks Back/Cancel (optional, nice UX)
+  let dirty = false;
+  form.querySelectorAll('input, select, textarea').forEach(el=>{
+    el.addEventListener('input', ()=> dirty = true);
+    el.addEventListener('change', ()=> dirty = true);
+  });
+
+  function confirmLeave(e, href){
+    if(!dirty) { window.location.href = href; return; }
+    e.preventDefault();
+    Swal.fire({
+      icon:'question',
+      title:'Discard changes?',
+      text:'You have unsaved changes.',
+      showCancelButton:true, confirmButtonText:'Discard', confirmButtonColor:'#d33'
+    }).then(res=>{ if(res.isConfirmed) window.location.href = href; });
+  }
+
+  document.querySelector('[data-back]')?.addEventListener('click', (e)=>{
+    confirmLeave(e, e.currentTarget.getAttribute('href'));
+  });
+  document.querySelector('[data-cancel]')?.addEventListener('click', (e)=>{
+    confirmLeave(e, e.currentTarget.getAttribute('href'));
+  });
+</script>
+{% endblock %}

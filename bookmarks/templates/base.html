@@ -1,0 +1,221 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}MarkVault{% endblock %}</title>
+
+  <!-- Bootstrap 5.3 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- Font Awesome 5 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <!-- (Optional) Hacker-ish fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* ====== Hacker Theme Tokens ====== */
+    :root{
+      --hx-bg:#0b1220;              /* page background */
+      --hx-card:#0f172a;            /* card bg */
+      --hx-border:#1f2937;          /* card/nav borders */
+      --hx-text:#e5e7eb;            /* primary text */
+      --hx-muted:#94a3b8;           /* secondary text */
+      --hx-primary:#14b6f1;         /* neon green */
+      --hx-primary-700:#0a99c9;     /* darker green */
+      --hx-primary-glow:rgba(20, 200, 241, 0.35);
+    }
+
+    /* Base */
+    html,body{ height:100%; }
+    body{
+      background:
+        radial-gradient(1200px 600px at -10% -10%, rgba(20, 167, 241, 0.07), transparent 60%),
+        radial-gradient(1000px 500px at 110% 0%, rgba(20, 167, 241, 0.07), transparent 60%),
+        var(--hx-bg);
+      color:var(--hx-text);
+      font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif;
+    }
+    .mono{ font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+    /* Cards & helpers */
+    .bm-card{ background:var(--hx-card); border:1px solid var(--hx-border); border-radius:1rem; }
+    .bm-shadow{ box-shadow:0 10px 24px rgba(0,0,0,.35); }
+    .bm-title{ color:var(--hx-text); }
+    .bm-muted{ color:var(--hx-muted); }
+
+    /* Buttons (primary → neon) */
+    .btn-primary{
+      background:var(--hx-primary);
+      border-color:var(--hx-primary-700);
+      color:#0b1220;
+    }
+    .btn-primary:hover{
+      background:var(--hx-primary-700);
+      border-color:var(--hx-primary-700);
+      box-shadow:0 0 18px var(--hx-primary-glow);
+      color:#061014;
+    }
+    .btn, .input-group-text{ border-radius:.75rem; }
+
+    /* ====== Glassy Navbar ====== */
+    .navbar{ font-family:'JetBrains Mono',monospace; }
+    .bg-glass{
+      background:rgba(2,6,23,.7);           /* near-black with alpha */
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .navbar-brand .fas{ color:var(--hx-primary); }
+    .navbar-dark .navbar-toggler{ border-color:rgba(255,255,255,.2); }
+    .navbar-dark .navbar-toggler-icon{
+      background-image:url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(149, 76, 252, 0.54)' stroke-width='2' stroke-linecap='round' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    }
+
+    /* Nav links: hover + active underline glow */
+    .nav-link{
+      position:relative;
+      color:var(--hx-text) !important;
+      opacity:.85;
+      padding:.5rem .75rem;
+      border-radius:.5rem;
+      transition: color .2s ease, background .2s ease, opacity .2s ease;
+    }
+    .nav-link:hover{
+      opacity:1;
+      background:rgba(20, 171, 241, 0.06);
+    }
+    .nav-link::after{
+      content:'';
+      position:absolute;
+      left:.6rem; right:.6rem; bottom:.25rem;
+      height:2px;
+      background: linear-gradient(90deg, transparent, var(--hx-primary), transparent);
+      transform: scaleX(0);
+      transform-origin:left;
+      transition: transform .25s ease;
+    }
+    .nav-link:hover::after{ transform: scaleX(1); }
+
+    /* Active state */
+    .nav-link.is-active{
+      color:var(--hx-text) !important;
+      background:rgba(20, 138, 241, 0.18);
+      box-shadow:0 0 0 2px rgba(20, 138, 241, 0.18) inset;
+    }
+    .nav-link.is-active::after{
+      transform: scaleX(1);
+      background:var(--hx-primary);
+    }
+
+    /* Brand styling */
+    .navbar-brand{ letter-spacing:.3px; }
+    .text-neon{ color:var(--hx-primary); }
+
+    /* ====== Auth split layout helpers (for login/signup v2) ====== */
+    .auth-split{ min-height: calc(100vh - 64px); } /* minus navbar height approx */
+    .auth-ill{
+      background: radial-gradient(400px 240px at 20% 20%, rgba(20, 142, 241, 0.12), transparent 50%),
+                  linear-gradient(180deg, rgba(20, 167, 241, 0.06), transparent);
+      border-right:1px solid var(--hx-border);
+    }
+    .auth-ill img{ width:100%; height:100%; object-fit:cover; opacity:.85; mix-blend-mode:screen; }
+  </style>
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-glass sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="{% url 'home' %}">
+      <i class="fa-solid fa-book-bookmark me-2"></i>
+      <span>MarkVault</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'home' %}is-active{% endif %}"
+               href="{% url 'home' %}"><i class="fas fa-home me-1"></i>Home</a>
+          </li>
+          <li class="nav-item ms-lg-1">
+            <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}is-active{% endif %}"
+               href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt me-1"></i>Dashboard</a>
+          </li>
+          <li class="nav-item ms-lg-2">
+            <a class="btn btn-primary mono" href="{% url 'logout' %}">
+              <i class="fas fa-sign-out-alt me-1"></i>Logout
+            </a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.url_name == 'home' %}is-active{% endif %}"
+               href="{% url 'home' %}"><i class="fas fa-home me-1"></i>Home</a>
+          </li>
+          <li class="nav-item ms-lg-1">
+            <a class="nav-link {% if request.resolver_match.url_name == 'signup' %}is-active{% endif %}"
+               href="{% url 'signup' %}"><i class="fas fa-user-plus me-1"></i>Signup</a>
+          </li>
+          <li class="nav-item ms-lg-2">
+            <a class="btn btn-primary mono" href="{% url 'login' %}">
+              <i class="fas fa-sign-in-alt me-1"></i>Login
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- (Optional) Noscript fallback for messages -->
+<noscript>
+  {% if messages %}
+    <div class="container pt-3">
+      {% for message in messages %}
+        {% with level=message.tags %}
+        <div class="alert alert-{{ level|default:'info' }} mb-2" role="alert">{{ message }}</div>
+        {% endwith %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</noscript>
+
+<!-- Main Content -->
+<main class="container py-4">
+  {% block content %}{% endblock %}
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Global SweetAlert2 toasts for Django messages -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  {% if messages %}
+    const toast = Swal.mixin({
+      toast:true, position:'top-end', showConfirmButton:false, timer:2600, timerProgressBar:true,
+      background:'#0f172a', color:'#e5e7eb',
+      didOpen:(t)=>{ t.style.boxShadow='0 0 18px {{ "rgba(20,241,149,.35)" }}'; }
+    });
+    {% for message in messages %}
+      (()=>{
+        const tag = "{{ message.tags|default_if_none:''|lower }}";
+        const icon = tag.includes('success') ? 'success'
+                   : (tag.includes('error') || tag.includes('danger')) ? 'error'
+                   : tag.includes('warning') ? 'warning'
+                   : 'info';
+        toast.fire({ icon, title: "{{ message|escapejs }}" });
+      })();
+    {% endfor %}
+  {% endif %}
+</script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>
